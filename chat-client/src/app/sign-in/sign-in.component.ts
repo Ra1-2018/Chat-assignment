@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { User } from '../model/user';
+import { UserService } from '../service/user.service';
 
 @Component({
   selector: 'app-sign-in',
@@ -10,12 +11,13 @@ export class SignInComponent implements OnInit {
 
   model = new User('', '');
 
-  constructor() { }
+  constructor(private userService: UserService) { }
 
   ngOnInit(): void {
   }
 
   onSubmit() {
     console.log(this.model);
+    this.userService.signIn();
   }
 }
