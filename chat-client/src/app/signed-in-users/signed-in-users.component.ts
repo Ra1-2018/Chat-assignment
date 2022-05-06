@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Sort } from '@angular/material/sort';
 import { User } from '../model/user';
+import { UserService } from '../service/user.service';
 
 @Component({
   selector: 'app-signed-in-users',
@@ -8,25 +9,25 @@ import { User } from '../model/user';
   styleUrls: ['./signed-in-users.component.css']
 })
 export class SignedInUsersComponent implements OnInit {
-
-  users: User[] = [];
-  sortedUsers: User[] = [];
   
-  constructor() { }
+  constructor(public userService: UserService,) { }
 
   ngOnInit(): void {
-    this.users = [new User('pera', 'pera'), new User('mika', 'mika'), new User('zika', 'zika')];
-    this.sortedUsers = this.users.slice();
+    this.getLoggedUsers();
+  }
+
+  getLoggedUsers() {
+    this.userService.getLoggedUsers().subscribe();
   }
 
   sortData(sort: Sort) {
-    const data = this.users.slice();
+    const data = this.userService.loggedUsers.slice();
     if (!sort.active || sort.direction === '') {
-      this.sortedUsers = data;
+      this.userService.loggedUsers = data;
       return;
     }
 
-    this.sortedUsers = data.sort((a, b) => {
+    this.userService.loggedUsers = data.sort((a, b) => {
       const isAsc = sort.direction === 'asc';
       switch (sort.active) {
         case 'username': return compare(a.username, b.username, isAsc);

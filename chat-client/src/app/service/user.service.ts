@@ -1,4 +1,8 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { User } from '../model/user';
+
+const baseUrl = 'http://localhost:8080/Chat-war/api/chat/';
 
 @Injectable({
   providedIn: 'root'
@@ -6,14 +10,23 @@ import { Injectable } from '@angular/core';
 export class UserService {
 
   isSignedIn = false;
+  loggedUsers: User[] = [];
 
-  constructor() { }
+  constructor(private http: HttpClient) { }
 
-  signIn() {
-    this.isSignedIn = true;
+  signIn(user: User) {
+    return this.http.post(baseUrl + 'login', user);
   }
   
+  register(user:  User) {
+    return this.http.post(baseUrl + 'register', user);
+  }
+
   signOut() {
     this.isSignedIn = false;
+  }
+
+  getLoggedUsers() {
+    return this.http.get(baseUrl + 'loggedIn');
   }
 }
