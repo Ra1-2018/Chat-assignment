@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { User } from './model/user';
 import { UserService } from './service/user.service';
 
@@ -10,15 +11,16 @@ import { UserService } from './service/user.service';
 export class AppComponent implements OnInit {
   title = 'chat-client';
 
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService,
+              private router: Router) { }
 
   ngOnInit(): void {
-    initSocket(this.userService);
+    initSocket(this.userService, this.router);
   }
 
 }
 
-function initSocket(userService: UserService) {
+function initSocket(userService: UserService, router: Router) {
   let connection: WebSocket|null = new WebSocket("ws://localhost:8080/Chat-war/ws/chat");
   connection.onopen = function() {
     console.log("Socket is open");
@@ -41,9 +43,20 @@ function initSocket(userService: UserService) {
         });
         userService.loggedUsers = users;
     }
+    else if(data[0] === "REGISTERED") {
+      let users:User[] = [];
+      data[1].split("|").forEach((user: string) => {
+          if (user) {
+              let userData = user.split(",");
+              users.push(new User(userData[0], userData[1]));
+          }
+      });
+      userService.registeredUsers = users;
+    }
     else if(data[0] == "LOG_IN" && data[1].includes("Yes")) {
       userService.isSignedIn = true;
       sessionStorage.setItem("user", data[2]);
+      router.navigate(['signed-in-users']);
     }
     else {
       alert(data[1]);

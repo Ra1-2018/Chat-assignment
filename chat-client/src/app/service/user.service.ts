@@ -11,6 +11,7 @@ export class UserService {
 
   isSignedIn = false;
   loggedUsers: User[] = [];
+  registeredUsers: User[] = [];
 
   constructor(private http: HttpClient) { }
 
@@ -29,5 +30,9 @@ export class UserService {
 
   getLoggedUsers() {
     return this.http.get(baseUrl + 'loggedIn');
+  }
+
+  getRegisteredUsers() {
+    return this.http.get(baseUrl + 'registered');
   }
 }

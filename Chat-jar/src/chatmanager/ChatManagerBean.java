@@ -55,4 +55,9 @@ public class ChatManagerBean implements ChatManagerRemote, ChatManagerLocal {
 		return false;
 	}
 
+	@Override
+	public List<User> registeredUsers() {
+		return registered;
+	}
+
 }

@@ -78,8 +78,16 @@ public class ChatAgent implements Agent {
 						break;
 					case "GET_LOGGEDIN":
 						response = "LOGGEDIN!";
-						List<User> users = chatManager.loggedInUsers();
-						for (User u : users) {
+						List<User> loggedUsers = chatManager.loggedInUsers();
+						for (User u : loggedUsers) {
+							response += u.toString() + "|";
+						}
+
+						break;
+					case "GET_REGISTERED":
+						response = "REGISTERED!";
+						List<User> registeredUsers = chatManager.registeredUsers();
+						for (User u : registeredUsers) {
 							response += u.toString() + "|";
 						}
 

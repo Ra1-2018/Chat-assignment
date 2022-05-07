@@ -30,4 +30,8 @@ public interface ChatRest {
 	@DELETE
 	@Path("/loggedIn/{user}")
 	public void logout(@PathParam("user") String username);
+	
+	@GET
+	@Path("/registered")
+	public void getRegisteredUsers();
 }
