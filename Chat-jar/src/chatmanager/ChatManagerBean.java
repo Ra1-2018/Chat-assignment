@@ -44,4 +44,15 @@ public class ChatManagerBean implements ChatManagerRemote, ChatManagerLocal {
 		return loggedIn;
 	}
 
+	@Override
+	public boolean logout(String username) {
+		for(User user : loggedIn) {
+			if(user.getUsername().equals(username)) {
+				loggedIn.remove(user);
+				return true;
+			}
+		}
+		return false;
+	}
+
 }

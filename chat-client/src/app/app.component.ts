@@ -25,6 +25,7 @@ function initSocket(userService: UserService) {
   }
 
   connection.onclose = function () {
+    userService.signOut();
     connection = null;
   }
 
@@ -42,6 +43,7 @@ function initSocket(userService: UserService) {
     }
     else if(data[0] == "LOG_IN" && data[1].includes("Yes")) {
       userService.isSignedIn = true;
+      sessionStorage.setItem("user", data[2]);
     }
     else {
       alert(data[1]);

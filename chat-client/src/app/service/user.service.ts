@@ -24,6 +24,7 @@ export class UserService {
 
   signOut() {
     this.isSignedIn = false;
+    return this.http.delete(baseUrl + 'loggedIn/' + sessionStorage.getItem("user"));
   }
 
   getLoggedUsers() {
