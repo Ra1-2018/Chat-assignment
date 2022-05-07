@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { User } from './model/user';
 import { UserService } from './service/user.service';
 
@@ -12,15 +13,16 @@ export class AppComponent implements OnInit {
   title = 'chat-client';
 
   constructor(private userService: UserService,
-              private router: Router) { }
+              private router: Router,
+              private toastr: ToastrService) { }
 
   ngOnInit(): void {
-    initSocket(this.userService, this.router);
+    initSocket(this.userService, this.router, this.toastr);
   }
 
 }
 
-function initSocket(userService: UserService, router: Router) {
+function initSocket(userService: UserService, router: Router, toastr: ToastrService) {
   let connection: WebSocket|null = new WebSocket("ws://localhost:8080/Chat-war/ws/chat");
   connection.onopen = function() {
     console.log("Socket is open");
@@ -58,8 +60,11 @@ function initSocket(userService: UserService, router: Router) {
       sessionStorage.setItem("user", data[2]);
       router.navigate(['signed-in-users']);
     }
+    else if(data[0] == "REGISTER" && data[1].includes("Yes")) {
+      toastr.success(data[1]);
+    }
     else {
-      alert(data[1]);
+      toastr.info(data[1]);
     }
   }
 }

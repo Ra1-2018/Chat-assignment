@@ -46,6 +46,7 @@ import {MatTreeModule} from '@angular/material/tree';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { SignedInUsersComponent } from './signed-in-users/signed-in-users.component';
 import { HttpClientModule } from '@angular/common/http';
+import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
   declarations: [
@@ -97,7 +98,8 @@ import { HttpClientModule } from '@angular/common/http';
     MatTooltipModule,
     MatTreeModule,
     BrowserAnimationsModule,
-    HttpClientModule
+    HttpClientModule,
+    ToastrModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]
