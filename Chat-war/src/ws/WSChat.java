@@ -35,7 +35,8 @@ public class WSChat {
 	
 	public void onMessage(String username, String message) {
 		Session session = sessions.get(username);
-		sendMessage(session, message);
+		if(session != null)
+			sendMessage(session, message);
 	}
 	
 	public void onMessage(String message) {

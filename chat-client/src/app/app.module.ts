@@ -47,6 +47,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { SignedInUsersComponent } from './signed-in-users/signed-in-users.component';
 import { HttpClientModule } from '@angular/common/http';
 import { ToastrModule } from 'ngx-toastr';
+import { SendMessageComponent } from './send-message/send-message.component';
 
 @NgModule({
   declarations: [
@@ -55,7 +56,8 @@ import { ToastrModule } from 'ngx-toastr';
     SignInComponent,
     NavigationComponent,
     RegisteredUsersComponent,
-    SignedInUsersComponent
+    SignedInUsersComponent,
+    SendMessageComponent
   ],
   imports: [
     BrowserModule,

@@ -57,8 +57,10 @@ function initSocket(userService: UserService, router: Router, toastr: ToastrServ
     }
     else if(data[0] == "LOG_IN" && data[1].includes("Yes")) {
       userService.isSignedIn = true;
-      sessionStorage.setItem("user", data[2]);
+      let username = data[2];
+      sessionStorage.setItem("user", username);
       router.navigate(['signed-in-users']);
+      initUserSocket(username, toastr);
     }
     else if(data[0] == "REGISTER" && data[1].includes("Yes")) {
       toastr.success(data[1]);
@@ -66,5 +68,21 @@ function initSocket(userService: UserService, router: Router, toastr: ToastrServ
     else {
       toastr.info(data[1]);
     }
+  }
+}
+
+function initUserSocket(username: string, toastr: ToastrService) {
+  let connection: WebSocket|null = new WebSocket("ws://localhost:8080/Chat-war/ws/" + username);
+  connection.onopen = function() {
+    console.log("User socket is open");
+  }
+
+  connection.onclose = function () {
+    connection = null;
+  }
+
+  connection.onmessage = function (msg) {
+    const data = msg.data.split("!");
+    toastr.info(data[1]);
   }
 }
