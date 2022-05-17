@@ -48,6 +48,7 @@ import { SignedInUsersComponent } from './signed-in-users/signed-in-users.compon
 import { HttpClientModule } from '@angular/common/http';
 import { ToastrModule } from 'ngx-toastr';
 import { SendMessageComponent } from './send-message/send-message.component';
+import { MessageAllComponent } from './message-all/message-all.component';
 
 @NgModule({
   declarations: [
@@ -57,7 +58,8 @@ import { SendMessageComponent } from './send-message/send-message.component';
     NavigationComponent,
     RegisteredUsersComponent,
     SignedInUsersComponent,
-    SendMessageComponent
+    SendMessageComponent,
+    MessageAllComponent
   ],
   imports: [
     BrowserModule,

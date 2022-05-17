@@ -1,19 +1,8 @@
 <div class="container-fluid">
     <div class="row justify-content-center">
         <div class="col-md-4">
-            <h1 style="text-align: center;">Send message</h1>
+            <h1 style="text-align: center;">Message all</h1>
             <form (ngSubmit)="onSubmit()" #messageForm="ngForm">
-                <div class="form-group mb-3">
-                    <label for="receiver" class="form-label">Receiver</label>
-                    <select class="form-control" id="receiver" required [(ngModel)]="message.receiver" name="receiver" #receiver="ngModel">
-                        <option selected disabled>Choose here</option>
-                        <option *ngFor="let user of userService.registeredUsers" [ngValue]="user">{{user.username}}</option>
-                    </select>
-                    <div [hidden]="receiver.valid || receiver.pristine"
-                        class="alert alert-danger">
-                    Receiver is required
-                    </div>
-                </div>
                 <div class="form-group mb-3">
                     <label for="subject" class="form-label">Subject</label>
                     <input class="form-control" id="subject" required [(ngModel)]="message.subject" name="subject" #subject="ngModel">
