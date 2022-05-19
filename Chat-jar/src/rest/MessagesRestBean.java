@@ -26,6 +26,7 @@ public class MessagesRestBean implements MessagesRest {
 	@Override
 	public void messageUser(Message message) {
 		AgentMessage amsg = new AgentMessage();
+		amsg.userArgs.put("command", "MESSAGE");
 		amsg.userArgs.put("receiver", message.getReceiver().getUsername());
 		amsg.userArgs.put("sender", message.getSender().getUsername());
 		amsg.userArgs.put("subject", message.getSubject());

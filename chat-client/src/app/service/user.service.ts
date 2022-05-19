@@ -24,6 +24,7 @@ export class UserService {
         this.user = user as User;
         this.isSignedIn = true;
         initSocket(this, this.router, this.toastr)
+        this.router.navigate(['signed-in-users']);
       },
       error: () => (this.toastr.error("Invalid username/password"))
     });

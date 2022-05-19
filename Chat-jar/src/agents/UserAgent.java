@@ -1,5 +1,7 @@
 package agents;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -28,7 +30,7 @@ public class UserAgent implements Agent {
 	 */
 	private static final long serialVersionUID = 1L;
 	private String agentId;
-
+	private List<models.Message> messages = new ArrayList<>();
 	@EJB
 	private CachedAgentsRemote cachedAgents;
 	@EJB
@@ -69,6 +71,15 @@ public class UserAgent implements Agent {
 							response += u.toString() + "|";
 						}
 
+						break;
+					case "MESSAGE":
+						response = "MESSAGE!";
+						String sender = (String) tmsg.getObjectProperty("sender");
+						String content = (String) tmsg.getObjectProperty("content");
+						String subject = (String) tmsg.getObjectProperty("subject");
+						models.Message msg = new models.Message(new User(receiver, ""), new User(sender, ""), LocalDateTime.now(), subject, content);
+						messages.add(msg);
+						response += "New message";
 						break;
 					default:
 						response = "ERROR!Option: " + option + " does not exist.";

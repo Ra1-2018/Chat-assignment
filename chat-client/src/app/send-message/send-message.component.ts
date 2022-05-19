@@ -21,12 +21,12 @@ export class SendMessageComponent implements OnInit {
   }
 
   getRegisteredUsers() {
-    //this.userService.getRegisteredUsers().subscribe();
+    this.userService.getRegisteredUsers();
   }
 
   onSubmit() {
     console.log(this.message);
-    this.message.sender = new User(sessionStorage.getItem("user") as string, '');
+    this.message.sender = this.userService.user;
     this.messageService.messageUser(this.message).subscribe();
   }
 }
