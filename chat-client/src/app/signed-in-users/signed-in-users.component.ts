@@ -17,7 +17,7 @@ export class SignedInUsersComponent implements OnInit {
   }
 
   getLoggedUsers() {
-    this.userService.getLoggedUsers().subscribe();
+    this.userService.getLoggedUsers();
   }
 
   sortData(sort: Sort) {

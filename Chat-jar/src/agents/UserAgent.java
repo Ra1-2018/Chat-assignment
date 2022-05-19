@@ -29,9 +29,7 @@ public class UserAgent implements Agent {
 	 */
 	private static final long serialVersionUID = 1L;
 	private String agentId;
-	
-	@EJB
-	private ChatManagerRemote chatManager;
+
 	@EJB
 	private CachedAgentsRemote cachedAgents;
 	@EJB
@@ -55,7 +53,6 @@ public class UserAgent implements Agent {
 			sender = (String) tmsg.getObjectProperty("sender");
 			content = (String) tmsg.getObjectProperty("content");
 			subject = (String) tmsg.getObjectProperty("subject");
-			chatManager.saveMessage(new models.Message(new User(sender, null), new User(receiver, null),LocalDateTime.now(), subject, content));
 			if (receiver.equals(agentId)) {
 				response = "MESSAGE_USER!New message from: " + sender;
 				System.out.println("Received from: " + sender);

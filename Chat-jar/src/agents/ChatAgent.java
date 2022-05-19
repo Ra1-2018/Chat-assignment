@@ -27,8 +27,8 @@ public class ChatAgent implements Agent {
 	private static final long serialVersionUID = 1L;
 	private String agentId;
 
-	@EJB
-	private ChatManagerRemote chatManager;
+	//@EJB
+	//private ChatManagerRemote chatManager;
 	@EJB
 	private CachedAgentsRemote cachedAgents;
 	@EJB
@@ -47,7 +47,7 @@ public class ChatAgent implements Agent {
 
 	@Override
 	public void handleMessage(Message message) {
-		TextMessage tmsg = (TextMessage) message;
+		/*TextMessage tmsg = (TextMessage) message;
 
 		String receiver;
 		try {
@@ -112,7 +112,7 @@ public class ChatAgent implements Agent {
 			}
 		} catch (JMSException e) {
 			e.printStackTrace();
-		}
+		}*/
 	}
 
 	@Override

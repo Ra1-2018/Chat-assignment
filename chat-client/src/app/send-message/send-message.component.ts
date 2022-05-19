@@ -21,7 +21,7 @@ export class SendMessageComponent implements OnInit {
   }
 
   getRegisteredUsers() {
-    this.userService.getRegisteredUsers().subscribe();
+    //this.userService.getRegisteredUsers().subscribe();
   }
 
   onSubmit() {
