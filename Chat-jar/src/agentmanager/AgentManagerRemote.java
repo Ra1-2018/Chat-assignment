@@ -8,4 +8,5 @@ import agents.Agent;
 public interface AgentManagerRemote {
 	public String startAgent(String name, String agentId);
 	public Agent getAgentById(String agentId);
+	public void stopAgent(String agentId);
 }

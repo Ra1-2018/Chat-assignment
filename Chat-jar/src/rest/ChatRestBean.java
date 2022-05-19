@@ -68,6 +68,7 @@ public class ChatRestBean implements ChatRest, ChatRestLocal {
 		if(!chatManager.logout(username)) {
 			return Response.status(Response.Status.BAD_REQUEST).build();
 		}
+		agentManager.stopAgent(username);
 		for(User u : chatManager.loggedInUsers()) {
 			AgentMessage message = new AgentMessage();
 			message.userArgs.put("receiver", u.getUsername());
