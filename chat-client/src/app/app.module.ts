@@ -49,6 +49,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { ToastrModule } from 'ngx-toastr';
 import { SendMessageComponent } from './send-message/send-message.component';
 import { MessageAllComponent } from './message-all/message-all.component';
+import { MessagesComponent } from './messages/messages.component';
 
 @NgModule({
   declarations: [
@@ -59,7 +60,8 @@ import { MessageAllComponent } from './message-all/message-all.component';
     RegisteredUsersComponent,
     SignedInUsersComponent,
     SendMessageComponent,
-    MessageAllComponent
+    MessageAllComponent,
+    MessagesComponent
   ],
   imports: [
     BrowserModule,

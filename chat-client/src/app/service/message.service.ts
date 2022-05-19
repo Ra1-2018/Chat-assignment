@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Message } from '../model/message';
+import { User } from '../model/user';
 
 const baseUrl = 'http://localhost:8080/Chat-war/api/messages/';
 
@@ -8,6 +9,8 @@ const baseUrl = 'http://localhost:8080/Chat-war/api/messages/';
   providedIn: 'root'
 })
 export class MessageService {
+
+  messages: Message[] = []
 
   constructor(private http: HttpClient) { }
 
@@ -17,5 +20,9 @@ export class MessageService {
 
   messageAll(message: Message) {
     return this.http.post(baseUrl + 'all', message);
+  }
+
+  getMessages(user: User) {
+    return this.http.get(baseUrl + user.username);
   }
 }

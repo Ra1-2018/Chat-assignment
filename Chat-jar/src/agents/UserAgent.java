@@ -1,7 +1,6 @@
 package agents;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -13,6 +12,7 @@ import javax.jms.Message;
 import javax.jms.TextMessage;
 
 import chatmanager.ChatManagerRemote;
+import messagestorage.MessageStorageRemote;
 import models.User;
 import ws.WSChat;
 /**
@@ -30,13 +30,14 @@ public class UserAgent implements Agent {
 	 */
 	private static final long serialVersionUID = 1L;
 	private String agentId;
-	private List<models.Message> messages = new ArrayList<>();
 	@EJB
 	private CachedAgentsRemote cachedAgents;
 	@EJB
 	private WSChat ws;
 	@EJB
 	private ChatManagerRemote chatManager;
+	@EJB
+	private MessageStorageRemote messageStorage;
 
 	@PostConstruct
 	public void postConstruct() {
@@ -78,8 +79,14 @@ public class UserAgent implements Agent {
 						String content = (String) tmsg.getObjectProperty("content");
 						String subject = (String) tmsg.getObjectProperty("subject");
 						models.Message msg = new models.Message(new User(receiver, ""), new User(sender, ""), LocalDateTime.now(), subject, content);
-						messages.add(msg);
+						messageStorage.addMessage(msg);
 						response += "New message";
+						break;
+					case "GET_MESSAGES":
+						response = "MESSAGES!";
+						for(models.Message m : messageStorage.getAll()) {
+							response += m.toString() + "|";
+						}
 						break;
 					default:
 						response = "ERROR!Option: " + option + " does not exist.";

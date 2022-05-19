@@ -2,7 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { Message } from '../model/message';
 import { User } from '../model/user';
+import { MessageService } from './message.service';
 
 const baseUrl = 'http://localhost:8080/Chat-war/api/users/';
 
@@ -16,14 +18,14 @@ export class UserService {
   registeredUsers: User[] = [];
   user: User = new User('', '');
 
-  constructor(private http: HttpClient, private toastr: ToastrService, private router: Router) { }
+  constructor(private http: HttpClient, private toastr: ToastrService, private router: Router, private messageService: MessageService) { }
 
   signIn(user: User) {
     return this.http.post(baseUrl + 'login', user).subscribe({
       next: (user) => {
         this.user = user as User;
         this.isSignedIn = true;
-        initSocket(this, this.router, this.toastr)
+        initSocket(this, this.router, this.toastr, this.messageService)
         this.router.navigate(['signed-in-users']);
       },
       error: () => (this.toastr.error("Invalid username/password"))
@@ -59,7 +61,7 @@ export class UserService {
   }
 }
 
-function initSocket(userService: UserService, router: Router, toastr: ToastrService) {
+function initSocket(userService: UserService, router: Router, toastr: ToastrService, messageService: MessageService) {
   let connection: WebSocket|null = new WebSocket("ws://localhost:8080/Chat-war/ws/" + userService.user.username);
   connection.onopen = function() {
     console.log("Socket is open");
@@ -91,6 +93,16 @@ function initSocket(userService: UserService, router: Router, toastr: ToastrServ
           }
       });
       userService.registeredUsers = users;
+    }
+    else if(data[0] === "MESSAGES") {
+      let messages:Message[] = [];
+      data[1].split("|").forEach((message: string) => {
+          if (message) {
+              let messageData = message.split(",");
+              messages.push(new Message(null, new User(messageData[0], ""), new Date(messageData[1]), messageData[2], messageData[3]));
+          }
+      });
+      messageService.messages = messages;
     }
     else {
       toastr.info(data[1]);

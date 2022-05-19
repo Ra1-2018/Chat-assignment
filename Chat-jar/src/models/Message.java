@@ -65,5 +65,10 @@ public class Message implements Serializable {
 	public void setContent(String content) {
 		this.content = content;
 	}
+
+	@Override
+	public String toString() {
+		return "" + sender.getUsername() + "," + dateCreated + "," + subject + "," + content;
+	}
 	
 }
