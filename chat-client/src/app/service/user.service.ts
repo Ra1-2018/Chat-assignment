@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { User } from '../model/user';
 
@@ -15,13 +16,14 @@ export class UserService {
   registeredUsers: User[] = [];
   user: User = new User('', '');
 
-  constructor(private http: HttpClient, private toastr: ToastrService) { }
+  constructor(private http: HttpClient, private toastr: ToastrService, private router: Router) { }
 
   signIn(user: User) {
     return this.http.post(baseUrl + 'login', user).subscribe({
       next: (user) => {
         this.user = user as User;
         this.isSignedIn = true;
+        initSocket(this, this.router, this.toastr)
       },
       error: () => (this.toastr.error("Invalid username/password"))
     });
@@ -53,5 +55,44 @@ export class UserService {
     return this.http.get(baseUrl + 'registered').subscribe({
       next: (users) => (this.registeredUsers = users as User[])
     });
+  }
+}
+
+function initSocket(userService: UserService, router: Router, toastr: ToastrService) {
+  let connection: WebSocket|null = new WebSocket("ws://localhost:8080/Chat-war/ws/" + userService.user.username);
+  connection.onopen = function() {
+    console.log("Socket is open");
+  }
+
+  connection.onclose = function () {
+    userService.signOut();
+    connection = null;
+  }
+
+  connection.onmessage = function (msg) {
+    const data = msg.data.split("!");
+    if(data[0] === "LOGGEDIN") {
+        let users:User[] = [];
+        data[1].split("|").forEach((user: string) => {
+            if (user) {
+                let userData = user.split(",");
+                users.push(new User(userData[0], userData[1]));
+            }
+        });
+        userService.loggedUsers = users;
+    }
+    else if(data[0] === "REGISTERED") {
+      let users:User[] = [];
+      data[1].split("|").forEach((user: string) => {
+          if (user) {
+              let userData = user.split(",");
+              users.push(new User(userData[0], userData[1]));
+          }
+      });
+      userService.registeredUsers = users;
+    }
+    else {
+      toastr.info(data[1]);
+    }
   }
 }

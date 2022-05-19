@@ -1,7 +1,6 @@
 package agents;
 
-import java.time.LocalDateTime;
-import java.util.Random;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -34,6 +33,8 @@ public class UserAgent implements Agent {
 	private CachedAgentsRemote cachedAgents;
 	@EJB
 	private WSChat ws;
+	@EJB
+	private ChatManagerRemote chatManager;
 
 	@PostConstruct
 	public void postConstruct() {
@@ -41,24 +42,44 @@ public class UserAgent implements Agent {
 	}
 	
 	@Override
-	public void handleMessage(Message msg) {
-		TextMessage tmsg = (TextMessage) msg;
+	public void handleMessage(Message message) {
+		TextMessage tmsg = (TextMessage) message;
+
 		String receiver;
-		String sender;
-		String content;
-		String subject;
-		String response;
 		try {
 			receiver = (String) tmsg.getObjectProperty("receiver");
-			sender = (String) tmsg.getObjectProperty("sender");
-			content = (String) tmsg.getObjectProperty("content");
-			subject = (String) tmsg.getObjectProperty("subject");
-			if (receiver.equals(agentId)) {
-				response = "MESSAGE_USER!New message from: " + sender;
-				System.out.println("Received from: " + sender);
-				System.out.println("Subject: " + subject);
-				System.out.println("Message: " + content);
-				ws.onMessage(receiver, response);
+			if (agentId.equals(receiver)) {
+				String option = "";
+				String response = "";
+				try {
+					option = (String) tmsg.getObjectProperty("command");
+					switch (option) {
+					case "GET_LOGGEDIN":
+						response = "LOGGEDIN!";
+						List<User> loggedUsers = chatManager.loggedInUsers();
+						for (User u : loggedUsers) {
+							response += u.toString() + "|";
+						}
+
+						break;
+					case "GET_REGISTERED":
+						response = "REGISTERED!";
+						List<User> registeredUsers = chatManager.registeredUsers();
+						for (User u : registeredUsers) {
+							response += u.toString() + "|";
+						}
+
+						break;
+					default:
+						response = "ERROR!Option: " + option + " does not exist.";
+						break;
+					}
+					System.out.println(response);
+					ws.onMessage(agentId, response);
+					
+				} catch (JMSException e) {
+					e.printStackTrace();
+				}
 			}
 		} catch (JMSException e) {
 			e.printStackTrace();
@@ -70,13 +91,6 @@ public class UserAgent implements Agent {
 		this.agentId = agentId;
 		cachedAgents.addRunningAgent(agentId, this);
 		return agentId;
-	}
-
-	private String generateId() {
-		Random r = new Random();
-		int low = 10;
-		int high = 100;
-		return Integer.toString(r.nextInt(high - low) + low);
 	}
 
 	@Override
