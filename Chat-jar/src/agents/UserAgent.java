@@ -80,7 +80,7 @@ public class UserAgent implements Agent {
 						String subject = (String) tmsg.getObjectProperty("subject");
 						models.Message msg = new models.Message(new User(receiver, ""), new User(sender, ""), LocalDateTime.now(), subject, content);
 						messageStorage.addMessage(msg);
-						response += "New message";
+						response += msg.toString();
 						break;
 					case "GET_MESSAGES":
 						response = "MESSAGES!";

@@ -104,6 +104,11 @@ function initSocket(userService: UserService, router: Router, toastr: ToastrServ
       });
       messageService.messages = messages;
     }
+    else if(data[0] === "MESSAGE") {
+      let messageData = data[1].split(",");
+      messageService.messages.push(new Message(null, new User(messageData[0], ""), new Date(messageData[1]), messageData[2], messageData[3]));
+      toastr.info("New message from " + messageData[0]);
+    }
     else {
       toastr.info(data[1]);
     }
