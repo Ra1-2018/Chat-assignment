@@ -81,7 +81,7 @@ public class ChatRestBean implements ChatRest, ChatRestLocal {
 
 	@Override
 	public Response getRegisteredUsers() {
-		return Response.status(Response.Status.OK).entity(chatManager.loggedInUsers()).build();
+		return Response.status(Response.Status.OK).entity(chatManager.registeredUsers()).build();
 	}
 
 }
