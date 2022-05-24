@@ -59,8 +59,12 @@ public class ChatRestBean implements ChatRest, ChatRestLocal {
 	}
 
 	@Override
-	public Response getloggedInUsers() {
-		return Response.status(Response.Status.OK).entity(chatManager.loggedInUsers()).build();
+	public void getloggedInUsers(String username) {
+		AgentMessage message = new AgentMessage();
+		message.userArgs.put("receiver", username);
+		message.userArgs.put("command", "GET_LOGGEDIN");
+		
+		messageManager.post(message);
 	}
 
 	@Override
@@ -80,8 +84,12 @@ public class ChatRestBean implements ChatRest, ChatRestLocal {
 	}
 
 	@Override
-	public Response getRegisteredUsers() {
-		return Response.status(Response.Status.OK).entity(chatManager.registeredUsers()).build();
+	public void getRegisteredUsers(String username) {
+		AgentMessage message = new AgentMessage();
+		message.userArgs.put("receiver", username);
+		message.userArgs.put("command", "GET_REGISTERED");
+		
+		messageManager.post(message);
 	}
 
 }

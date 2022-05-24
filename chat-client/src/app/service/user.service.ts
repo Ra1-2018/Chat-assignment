@@ -26,7 +26,7 @@ export class UserService {
         this.user = user as User;
         this.isSignedIn = true;
         initSocket(this, this.router, this.toastr, this.messageService)
-        this.router.navigate(['signed-in-users']);
+        this.router.navigate(['send-message']);
       },
       error: () => (this.toastr.error("Invalid username/password"))
     });
@@ -49,15 +49,11 @@ export class UserService {
   }
 
   getLoggedUsers() {
-    return this.http.get(baseUrl + 'loggedIn').subscribe({
-      next: (users) => (this.loggedUsers = users as User[])
-    });
+    return this.http.get(baseUrl + 'loggedIn').subscribe();
   }
 
   getRegisteredUsers() {
-    return this.http.get(baseUrl + 'registered').subscribe({
-      next: (users) => (this.registeredUsers = users as User[])
-    });
+    return this.http.get(baseUrl + 'registered').subscribe();
   }
 }
 

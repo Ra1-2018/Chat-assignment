@@ -45,7 +45,8 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatTreeModule} from '@angular/material/tree';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { SignedInUsersComponent } from './signed-in-users/signed-in-users.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { Interceptor } from './interceptor/interceptor';
 import { ToastrModule } from 'ngx-toastr';
 import { SendMessageComponent } from './send-message/send-message.component';
 import { MessageAllComponent } from './message-all/message-all.component';
@@ -107,7 +108,13 @@ import { MessagesComponent } from './messages/messages.component';
     HttpClientModule,
     ToastrModule.forRoot()
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: Interceptor,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
