@@ -64,7 +64,7 @@ public class ConnectionManagerBean implements ConnectionManager {
 			System.out.println("Number of connected nodes: " + connections.size());
 		}
 		else {
-			System.out.println("Server stuff");
+			System.out.println("Master node started");
 		}
 
 	}
