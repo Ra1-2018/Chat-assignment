@@ -39,7 +39,7 @@ public class ConnectionManagerBean implements ConnectionManager {
 	private String nodeAddress;
 	private String nodeAlias;
 	private List<String> connections = new ArrayList<>();
-	private String masterAlias;
+	private String masterAlias = null;
 	
 	@EJB
 	private ChatManagerRemote chatManager;
@@ -55,12 +55,12 @@ public class ConnectionManagerBean implements ConnectionManager {
 		System.out.println("MASTER ADDR: " + masterAlias + ", node name: " + nodeAlias + ", node address: " + nodeAddress);
 		if (masterAlias != null && !masterAlias.equals("")) {
 			ResteasyClient client = new ResteasyClientBuilder().build();
-			ResteasyWebTarget rtarget = client.target("http://" + masterAlias + "/Chat-war/api/connection");
+			ResteasyWebTarget rtarget = client.target("http://" + masterAlias + "/api/connection");
 			ConnectionManager rest = rtarget.proxy(ConnectionManager.class);
 			connections = rest.registerNode(nodeAlias);
 			connections.remove(nodeAlias);
 			connections.add(masterAlias);
-			client.close();
+			//client.close();
 			System.out.println("Number of connected nodes: " + connections.size());
 		}
 
@@ -84,8 +84,7 @@ public class ConnectionManagerBean implements ConnectionManager {
 	private String getMasterAlias() {
 		try {
 			File f = FileUtils.getFile(ConnectionManager.class, "", "connections.properties");
-			FileInputStream fileInput;
-			fileInput = new FileInputStream(f);
+			FileInputStream fileInput = new FileInputStream(f);
 			Properties properties = new Properties();
 			properties.load(fileInput);
 			fileInput.close();
@@ -98,14 +97,14 @@ public class ConnectionManagerBean implements ConnectionManager {
 	
 	@Override
 	public List<String> registerNode(String nodeAlias) {
+		System.out.println("New node registered: " + nodeAlias);
 		for (String c : connections) {
 			ResteasyClient client = new ResteasyClientBuilder().build();
-			ResteasyWebTarget rtarget = client.target("http://" + c + "/Chat-war/api/connection");
+			ResteasyWebTarget rtarget = client.target("http://" + c + "/api/connection");
 			ConnectionManager rest = rtarget.proxy(ConnectionManager.class);
 			rest.addNode(nodeAlias);
 		}
 		connections.add(nodeAlias);
-		System.out.println("Number of connected nodes: " + connections.size());
 		return connections;
 	}
 
