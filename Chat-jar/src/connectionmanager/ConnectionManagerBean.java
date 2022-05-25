@@ -60,7 +60,7 @@ public class ConnectionManagerBean implements ConnectionManager {
 			connections = rest.registerNode(nodeAlias);
 			connections.remove(nodeAlias);
 			connections.add(masterAlias);
-			//client.close();
+			client.close();
 			System.out.println("Number of connected nodes: " + connections.size());
 		}
 		else {
