@@ -12,6 +12,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.ejb.EJB;
 import javax.ejb.Remote;
+import javax.ejb.Schedule;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.management.AttributeNotFoundException;
@@ -107,6 +108,7 @@ public class ConnectionManagerBean implements ConnectionManager {
 			ResteasyWebTarget rtarget = client.target("http://" + c + "/Chat-war/api/connection");
 			ConnectionManager rest = rtarget.proxy(ConnectionManager.class);
 			rest.addNode(nodeAlias);
+			client.close();
 		}
 		connections.add(nodeAlias);
 		return connections;
@@ -137,12 +139,52 @@ public class ConnectionManagerBean implements ConnectionManager {
 	
 	@PreDestroy
 	private void shutDown() {
+		notifyAllDelete(nodeAlias);
+	}
+	
+	private void notifyAllDelete(String alias) {
 		for(String c : connections) {
 			ResteasyClient client = new ResteasyClientBuilder().build();
 			ResteasyWebTarget rtarget = client.target("http://" + c + "/Chat-war/api/connection");
 			ConnectionManager rest = rtarget.proxy(ConnectionManager.class);
-			rest.deleteNode(nodeAlias);
+			rest.deleteNode(alias);
+			client.close();
 		}
 	}
 
+	@Schedule(hour = "*", minute="*/1", persistent=false)
+	private void heartbeat() {
+		System.out.println("Heartbeat protocol started");
+		for(String c : connections) {
+			System.out.println("Pinging node: " + c);
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					if(!nodeResponded(c)) {
+						System.out.println("Node: " + c + " not responding");
+						connections.remove(c);
+						notifyAllDelete(c);
+					}
+				}
+			}).start();
+		}
+	}
+	
+	private boolean nodeResponded(String alias) {
+		for(int i=0; i<2; i++) {
+			try {
+				ResteasyClient client = new ResteasyClientBuilder().build();
+				ResteasyWebTarget rtarget = client.target("http://" + alias + "/Chat-war/api/connection");
+				ConnectionManager rest = rtarget.proxy(ConnectionManager.class);
+				String response = rest.pingNode();
+				client.close();
+				if(response.equals("OK")) {
+					return true;
+				}
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return false;
+	}
 }
