@@ -26,10 +26,16 @@ public interface ConnectionManager {
 	
 	@DELETE
 	@Path("/node/{alias}")
-	public void deleteNode(@PathParam("alias") String alias);
+	public void deleteNode(@PathParam("alias") String nodeAlias);
 	
 	@GET
 	@Path("/node")
 	@Produces(MediaType.TEXT_PLAIN)
 	public String pingNode();
+	
+	@POST
+	@Path("/nodes")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public List<String> getNodes();
 }

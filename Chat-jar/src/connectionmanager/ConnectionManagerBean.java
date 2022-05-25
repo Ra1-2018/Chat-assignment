@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Properties;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.ejb.EJB;
 import javax.ejb.Remote;
 import javax.ejb.Singleton;
@@ -113,19 +114,35 @@ public class ConnectionManagerBean implements ConnectionManager {
 
 	@Override
 	public void addNode(String nodeAlias) {
+		System.out.println("New node added: " + nodeAlias);
 		connections.add(nodeAlias);
 	}
 
 	@Override
-	public void deleteNode(String alias) {
-		// TODO Auto-generated method stub
-		
+	public void deleteNode(String nodeAlias) {
+		System.out.println("Node removed: " + nodeAlias);
+		connections.remove(nodeAlias);
 	}
 
 	@Override
 	public String pingNode() {
-		// TODO Auto-generated method stub
-		return null;
+		System.out.println("Node pinged");
+		return "OK";
+	}
+
+	@Override
+	public List<String> getNodes() {
+		return connections;
+	}
+	
+	@PreDestroy
+	private void shutDown() {
+		for(String c : connections) {
+			ResteasyClient client = new ResteasyClientBuilder().build();
+			ResteasyWebTarget rtarget = client.target("http://" + c + "/Chat-war/api/connection");
+			ConnectionManager rest = rtarget.proxy(ConnectionManager.class);
+			rest.deleteNode(nodeAlias);
+		}
 	}
 
 }
