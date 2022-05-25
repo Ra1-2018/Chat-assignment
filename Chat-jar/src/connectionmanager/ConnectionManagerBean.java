@@ -105,6 +105,7 @@ public class ConnectionManagerBean implements ConnectionManager {
 			rest.addNode(nodeAlias);
 		}
 		connections.add(nodeAlias);
+		System.out.println("Number of connected nodes: " + connections.size());
 		return connections;
 	}
 
