@@ -55,13 +55,16 @@ public class ConnectionManagerBean implements ConnectionManager {
 		System.out.println("MASTER ADDR: " + masterAlias + ", node name: " + nodeAlias + ", node address: " + nodeAddress);
 		if (masterAlias != null && !masterAlias.equals("")) {
 			ResteasyClient client = new ResteasyClientBuilder().build();
-			ResteasyWebTarget rtarget = client.target("http://" + masterAlias + "/api/connection");
+			ResteasyWebTarget rtarget = client.target("http://" + masterAlias + "/Chat-war/api/connection");
 			ConnectionManager rest = rtarget.proxy(ConnectionManager.class);
 			connections = rest.registerNode(nodeAlias);
 			connections.remove(nodeAlias);
 			connections.add(masterAlias);
 			//client.close();
 			System.out.println("Number of connected nodes: " + connections.size());
+		}
+		else {
+			System.out.println("Server stuff");
 		}
 
 	}
@@ -88,7 +91,7 @@ public class ConnectionManagerBean implements ConnectionManager {
 			Properties properties = new Properties();
 			properties.load(fileInput);
 			fileInput.close();
-			return properties.getProperty("master") + ":8080";
+			return properties.getProperty("master");
 		} catch (IOException e) {
 			e.printStackTrace();
 			return null;
@@ -100,7 +103,7 @@ public class ConnectionManagerBean implements ConnectionManager {
 		System.out.println("New node registered: " + nodeAlias);
 		for (String c : connections) {
 			ResteasyClient client = new ResteasyClientBuilder().build();
-			ResteasyWebTarget rtarget = client.target("http://" + c + "/api/connection");
+			ResteasyWebTarget rtarget = client.target("http://" + c + "/Chat-war/api/connection");
 			ConnectionManager rest = rtarget.proxy(ConnectionManager.class);
 			rest.addNode(nodeAlias);
 		}

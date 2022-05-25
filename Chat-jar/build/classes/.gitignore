@@ -1,2 +1,9 @@
-/util/
+/agentmanager/
+/agents/
+/chatmanager/
 /connectionmanager/
+/messagemanager/
+/messagestorage/
+/models/
+/rest/
+/util/
