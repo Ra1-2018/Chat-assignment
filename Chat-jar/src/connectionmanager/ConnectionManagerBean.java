@@ -89,7 +89,7 @@ public class ConnectionManagerBean implements ConnectionManager {
 			Properties properties = new Properties();
 			properties.load(fileInput);
 			fileInput.close();
-			return properties.getProperty("master");
+			return properties.getProperty("master") + ":8080";
 		} catch (IOException e) {
 			e.printStackTrace();
 			return null;
