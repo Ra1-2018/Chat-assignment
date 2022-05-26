@@ -187,6 +187,7 @@ public class ConnectionManagerBean implements ConnectionManager {
 	@Override
 	public void notifyAllLoggedIn() {
 		for (String c: connections) {
+			System.out.println("Sending logged users to node: " + c);
 			ResteasyClient resteasyClient = new ResteasyClientBuilder().build();
 			ResteasyWebTarget rtarget = resteasyClient.target("http://" + c + "/Chat-war/api/connection");
 			ConnectionManager rest = rtarget.proxy(ConnectionManager.class);
@@ -197,6 +198,7 @@ public class ConnectionManagerBean implements ConnectionManager {
 
 	@Override
 	public void setLoggedInRemote(List<User> users) {
+		System.out.println("Number of logged users: " + users.size());
 		chatManager.setLoggedInUsers(users);
 	}
 
