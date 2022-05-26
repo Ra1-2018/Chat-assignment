@@ -3,9 +3,11 @@ package chatmanager;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Singleton;
 
+import connectionmanager.ConnectionManager;
 import models.User;
 
 // TODO Implement the rest of Client-Server functionalities 
@@ -18,6 +20,10 @@ public class ChatManagerBean implements ChatManagerRemote, ChatManagerLocal {
 
 	private List<User> registered = new ArrayList<User>();
 	private List<User> loggedIn = new ArrayList<User>();
+	
+	@EJB
+	private ConnectionManager connectionManager;
+	
 	/**
 	 * Default constructor.
 	 */
@@ -39,6 +45,7 @@ public class ChatManagerBean implements ChatManagerRemote, ChatManagerLocal {
 		if(!exists)
 			return false;
 		loggedIn.add(user);
+		connectionManager.notifyAllLoggedIn();
 		return true;
 	}
 
@@ -52,6 +59,7 @@ public class ChatManagerBean implements ChatManagerRemote, ChatManagerLocal {
 		for(User user : loggedIn) {
 			if(user.getUsername().equals(username)) {
 				loggedIn.remove(user);
+				connectionManager.notifyAllLoggedIn();
 				return true;
 			}
 		}

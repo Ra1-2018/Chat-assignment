@@ -27,9 +27,6 @@ public class ChatRestBean implements ChatRest, ChatRestLocal {
 	@EJB
 	private AgentManagerRemote agentManager;
 	
-	@EJB
-	private ConnectionManager connectionManager;
-	
 	@Override
 	public Response register(User user) {
 		if(!chatManager.register(user)) {
@@ -58,7 +55,6 @@ public class ChatRestBean implements ChatRest, ChatRestLocal {
 			
 			messageManager.post(message);
 		}
-		connectionManager.notifyAllLoggedIn();
 		return Response.status(Response.Status.OK).entity(user).build();
 	}
 
@@ -84,7 +80,6 @@ public class ChatRestBean implements ChatRest, ChatRestLocal {
 			
 			messageManager.post(message);
 		}
-		connectionManager.notifyAllLoggedIn();
 		return Response.status(Response.Status.OK).build();
 	}
 
