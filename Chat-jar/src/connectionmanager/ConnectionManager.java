@@ -11,8 +11,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import models.Host;
-
 public interface ConnectionManager {
 
 	@POST
@@ -35,13 +33,4 @@ public interface ConnectionManager {
 	@Produces(MediaType.TEXT_PLAIN)
 	public String pingNode();
 	
-	@POST
-	@Path("/nodes")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes(MediaType.APPLICATION_JSON)
-	public List<String> getNodes();
-	
-	public Host getHost();
-	
-	public void notifyAllLoggedIn();
 }
