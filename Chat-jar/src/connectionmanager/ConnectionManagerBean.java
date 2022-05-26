@@ -29,6 +29,7 @@ import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
 
 import chatmanager.ChatManagerRemote;
+import rest.ChatRest;
 import util.FileUtils;
 import ws.WSChat;
 
@@ -185,7 +186,13 @@ public class ConnectionManagerBean implements ConnectionManager {
 
 	@Override
 	public void notifyAllLoggedIn() {
-		
+		for(String c : connections) {
+			ResteasyClient client = new ResteasyClientBuilder().build();
+			ResteasyWebTarget rtarget = client.target("http://" + c + "/Chat-war/api/users");
+			ChatRest rest = rtarget.proxy(ChatRest.class);
+			rest.postLoggedInUsers(chatManager.loggedInUsers());
+			client.close();
+		}
 	}
 
 }

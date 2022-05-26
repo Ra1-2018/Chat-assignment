@@ -1,4 +1,5 @@
 package rest;
+import java.util.List;
 
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
@@ -92,4 +93,8 @@ public class ChatRestBean implements ChatRest, ChatRestLocal {
 		messageManager.post(message);
 	}
 	
+	@Override
+	public void postLoggedInUsers(List<User> users) {
+		chatManager.setLoggedInUsers(users);
+	}
 }
