@@ -32,4 +32,6 @@ public interface ConnectionManager {
 	@Path("/node")
 	@Produces(MediaType.TEXT_PLAIN)
 	public String pingNode();
+	
+	public void notifyAllLoggedIn();
 }

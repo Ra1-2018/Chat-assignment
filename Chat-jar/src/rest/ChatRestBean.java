@@ -1,17 +1,8 @@
 package rest;
 
-import java.lang.management.ManagementFactory;
-
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
-import javax.management.AttributeNotFoundException;
-import javax.management.InstanceNotFoundException;
-import javax.management.MBeanException;
-import javax.management.MBeanServer;
-import javax.management.MalformedObjectNameException;
-import javax.management.ObjectName;
-import javax.management.ReflectionException;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 
@@ -19,7 +10,6 @@ import agentmanager.AgentManagerRemote;
 import chatmanager.ChatManagerRemote;
 import messagemanager.AgentMessage;
 import messagemanager.MessageManagerRemote;
-import models.Host;
 import models.User;
 import util.JNDILookup;
 
@@ -54,7 +44,6 @@ public class ChatRestBean implements ChatRest, ChatRestLocal {
 
 	@Override
 	public Response login(User user) {
-		user.setHost(getHost());
 		if(!chatManager.login(user)) {
 			return Response.status(Response.Status.BAD_REQUEST).build();
 		}
@@ -103,24 +92,4 @@ public class ChatRestBean implements ChatRest, ChatRestLocal {
 		messageManager.post(message);
 	}
 	
-	private Host getHost() {
-		String nodeAddress = getNodeAddress();
-		String nodeAlias = getNodeAlias() + ":8080";
-		return new Host(nodeAlias, nodeAddress);
-	}
-
-	private String getNodeAddress() {		
-		try {
-			MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
-			ObjectName http = new ObjectName("jboss.as:socket-binding-group=standard-sockets,socket-binding=http");
-			return (String) mBeanServer.getAttribute(http, "boundAddress");			
-		} catch (MalformedObjectNameException | InstanceNotFoundException | AttributeNotFoundException | ReflectionException | MBeanException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-	
-	private String getNodeAlias() {		
-		return System.getProperty("jboss.node.name");
-	}
 }

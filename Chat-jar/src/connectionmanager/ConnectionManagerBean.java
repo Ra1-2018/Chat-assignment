@@ -183,4 +183,9 @@ public class ConnectionManagerBean implements ConnectionManager {
 		return false;
 	}
 
+	@Override
+	public void notifyAllLoggedIn() {
+		
+	}
+
 }
