@@ -51,8 +51,6 @@ public class ChatRestBean implements ChatRest, ChatRestLocal {
 
 	@Override
 	public Response login(User user) {
-		Host host = connectionManager.getHost();
-		user.setHost(host);
 		if(!chatManager.login(user)) {
 			return Response.status(Response.Status.BAD_REQUEST).build();
 		}
