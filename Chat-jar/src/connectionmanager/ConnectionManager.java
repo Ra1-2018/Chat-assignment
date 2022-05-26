@@ -46,4 +46,16 @@ public interface ConnectionManager {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void setLoggedInRemote(List<User> users);
+	
+	@POST
+	@Path("/notify/registered")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public void notifyAllRegistered();
+
+	@POST
+	@Path("/users/registered")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public void setRegisteredRemote(List<User> users);
 }

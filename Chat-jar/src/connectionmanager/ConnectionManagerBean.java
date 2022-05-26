@@ -217,4 +217,32 @@ public class ConnectionManagerBean implements ConnectionManager {
 		}
 	}
 
+	@Override
+	public void notifyAllRegistered() {
+		for (String c: connections) {
+			System.out.println("Sending registered users to node: " + c);
+			ResteasyClient resteasyClient = new ResteasyClientBuilder().build();
+			ResteasyWebTarget rtarget = resteasyClient.target("http://" + c + "/Chat-war/api/connection");
+			ConnectionManager rest = rtarget.proxy(ConnectionManager.class);
+			rest.setRegisteredRemote(chatManager.registeredUsers());
+			resteasyClient.close();
+		}	
+	}
+
+	@Override
+	public void setRegisteredRemote(List<User> users) {
+		System.out.println("Number of registered users: " + users.size());
+		chatManager.setRegisteredUsers(users);
+		for(User u : chatManager.loggedInUsers()) {
+			if(!u.getHost().getAlias().equals(getNodeAlias() + ":8080")) {
+				continue;
+			}
+			AgentMessage message = new AgentMessage();
+			message.userArgs.put("receiver", u.getUsername());
+			message.userArgs.put("command", "GET_REGISTERED");
+			
+			messageManager.post(message);
+		}
+	}
+
 }

@@ -45,6 +45,7 @@ public class ChatManagerBean implements ChatManagerRemote, ChatManagerLocal {
 		if(exists)
 			return false;
 		registered.add(user);
+		connectionManager.notifyAllRegistered();
 		return true;
 	}
 
@@ -85,6 +86,11 @@ public class ChatManagerBean implements ChatManagerRemote, ChatManagerLocal {
 	@Override
 	public void setLoggedInUsers(List<User> users) {
 		loggedIn = users;
+	}
+	
+	@Override
+	public void setRegisteredUsers(List<User> users) {
+		registered = users;
 	}
 
 	private Host getLocalHost() {

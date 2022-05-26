@@ -21,4 +21,6 @@ public interface ChatManagerRemote {
 	
 	public void setLoggedInUsers(List<User> users);
 	
+	public void setRegisteredUsers(List<User> users);
+	
 }
