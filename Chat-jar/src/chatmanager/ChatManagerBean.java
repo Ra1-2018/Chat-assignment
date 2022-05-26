@@ -111,4 +111,14 @@ public class ChatManagerBean implements ChatManagerRemote, ChatManagerLocal {
 	private String getNodeAlias() {		
 		return System.getProperty("jboss.node.name");
 	}
+
+	@Override
+	public User getByUsername(String username) {
+		for(User user : loggedIn) {
+			if(user.getUsername().equals(username)) {
+				return user;
+			}
+		}
+		return null;
+	}
 }
