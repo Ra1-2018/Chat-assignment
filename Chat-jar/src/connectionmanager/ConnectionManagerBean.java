@@ -59,11 +59,8 @@ public class ConnectionManagerBean implements ConnectionManager {
 			ResteasyClient client = new ResteasyClientBuilder().build();
 			ResteasyWebTarget rtarget = client.target("http://" + masterAlias + "/Chat-war/api/connection");
 			ConnectionManager rest = rtarget.proxy(ConnectionManager.class);
-			connections = rest.registerNode(nodeAlias);
-			connections.remove(nodeAlias);
-			connections.add(masterAlias);
+			rest.registerNode(nodeAlias);
 			client.close();
-			System.out.println("Number of connected nodes: " + connections.size());
 		}
 		else {
 			System.out.println("Master node started");
@@ -101,7 +98,7 @@ public class ConnectionManagerBean implements ConnectionManager {
 	}
 	
 	@Override
-	public List<String> registerNode(String nodeAlias) {
+	public void registerNode(String nodeAlias) {
 		System.out.println("New node registered: " + nodeAlias);
 		for (String c : connections) {
 			ResteasyClient client = new ResteasyClientBuilder().build();
@@ -111,7 +108,11 @@ public class ConnectionManagerBean implements ConnectionManager {
 			client.close();
 		}
 		connections.add(nodeAlias);
-		return connections;
+		ResteasyClient client = new ResteasyClientBuilder().build();
+		ResteasyWebTarget rtarget = client.target("http://" + nodeAlias + "/Chat-war/api/connection");
+		ConnectionManager rest = rtarget.proxy(ConnectionManager.class);
+		rest.setNodes(connections);
+		client.close();
 	}
 
 	@Override
@@ -130,11 +131,6 @@ public class ConnectionManagerBean implements ConnectionManager {
 	public String pingNode() {
 		System.out.println("Node pinged");
 		return "OK";
-	}
-
-	@Override
-	public List<String> getNodes() {
-		return connections;
 	}
 	
 	@PreDestroy
@@ -186,5 +182,13 @@ public class ConnectionManagerBean implements ConnectionManager {
 			}
 		}
 		return false;
+	}
+
+	@Override
+	public void setNodes(List<String> nodes) {
+		System.out.println("Number of connected nodes: " + connections.size());
+		connections = nodes;
+		connections.remove(nodeAlias);
+		connections.add(masterAlias);
 	}
 }

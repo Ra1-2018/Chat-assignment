@@ -17,7 +17,7 @@ public interface ConnectionManager {
 	@Path("/register")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public List<String> registerNode(String nodeAlias);
+	public void registerNode(String nodeAlias);
 	
 	@POST
 	@Path("/node")
@@ -37,5 +37,5 @@ public interface ConnectionManager {
 	@Path("/nodes")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public List<String> getNodes();
+	public void setNodes(List<String> nodes);
 }
