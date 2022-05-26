@@ -7,7 +7,6 @@ import javax.ws.rs.core.Response;
 
 import agentmanager.AgentManagerRemote;
 import chatmanager.ChatManagerRemote;
-import connectionmanager.ConnectionManager;
 import messagemanager.AgentMessage;
 import messagemanager.MessageManagerRemote;
 import models.User;

@@ -39,4 +39,9 @@ public class Host implements Serializable {
 		return serialVersionUID;
 	}
 
+	@Override
+	public String toString() {
+		return alias + "," + address;
+	}
+
 }
