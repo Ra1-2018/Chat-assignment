@@ -141,6 +141,19 @@ public class ConnectionManagerBean implements ConnectionManager {
 	@PreDestroy
 	private void shutDown() {
 		notifyAllDelete(nodeAlias);
+		notifyLogOutOnShutDown(nodeAlias);
+	}
+	
+	private void notifyLogOutOnShutDown(String alias) {
+		List<User> users = chatManager.loggedInUsers();
+		List<User> ret = new ArrayList<>();
+		for(User u: users) {
+			if(!u.getHost().getAlias().equals(alias)) {
+				ret.add(u);
+			}
+		}
+		chatManager.setLoggedInUsers(ret);
+		notifyAllLoggedIn();
 	}
 	
 	private void notifyAllDelete(String alias) {
@@ -165,6 +178,7 @@ public class ConnectionManagerBean implements ConnectionManager {
 						System.out.println("Node: " + c + " not responding");
 						connections.remove(c);
 						notifyAllDelete(c);
+						notifyLogOutOnShutDown(c);
 					}
 				}
 			}).start();
