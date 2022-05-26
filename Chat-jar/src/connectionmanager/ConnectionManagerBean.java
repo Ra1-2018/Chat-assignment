@@ -145,6 +145,7 @@ public class ConnectionManagerBean implements ConnectionManager {
 	}
 	
 	private void notifyLogOutOnShutDown(String alias) {
+		System.out.println("Logging out users on node: " + alias);
 		List<User> users = chatManager.loggedInUsers();
 		List<User> ret = new ArrayList<>();
 		for(User u: users) {
