@@ -11,6 +11,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import models.User;
+
 public interface ConnectionManager {
 
 	@POST
@@ -33,5 +35,15 @@ public interface ConnectionManager {
 	@Produces(MediaType.TEXT_PLAIN)
 	public String pingNode();
 	
+	@POST
+	@Path("/notify/loggedIn")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
 	public void notifyAllLoggedIn();
+
+	@POST
+	@Path("/users/loggedIn")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public void setLoggedInRemote(List<User> users);
 }
