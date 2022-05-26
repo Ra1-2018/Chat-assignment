@@ -152,17 +152,20 @@ public class ConnectionManagerBean implements ConnectionManager {
 	
 	@PreDestroy
 	private void shutDown() {
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				notifyAllDelete(nodeAlias);
-				notifyLogOutOnShutDown(nodeAlias);
+		List<User> users = chatManager.loggedInUsers();
+		List<User> ret = new ArrayList<>();
+		for(User u: users) {
+			if(!u.getHost().getAlias().equals(nodeAlias)) {
+				ret.add(u);
 			}
-		}).start();
+		}
+		chatManager.setLoggedInUsers(ret);
+		notifyAllLoggedIn();
+		notifyAllDelete(nodeAlias);
 	}
 	
 	private void notifyLogOutOnShutDown(String alias) {
-		System.out.println("Logging out users on node: " + alias);
+		/*System.out.println("Logging out users on node: " + alias);
 		List<User> users = chatManager.loggedInUsers();
 		List<User> ret = new ArrayList<>();
 		for(User u: users) {
@@ -171,7 +174,7 @@ public class ConnectionManagerBean implements ConnectionManager {
 			}
 		}
 		chatManager.setLoggedInUsers(ret);
-		notifyAllLoggedIn();
+		notifyAllLoggedIn();*/
 	}
 	
 	private void notifyAllDelete(String alias) {
@@ -180,6 +183,7 @@ public class ConnectionManagerBean implements ConnectionManager {
 			ResteasyWebTarget rtarget = client.target("http://" + c + "/Chat-war/api/connection");
 			ConnectionManager rest = rtarget.proxy(ConnectionManager.class);
 			rest.deleteNode(alias);
+			rest.setLoggedInRemote(chatManager.loggedInUsers());
 			client.close();
 		}
 	}
