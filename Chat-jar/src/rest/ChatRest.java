@@ -1,7 +1,5 @@
 package rest;
 
-import java.util.List;
-
 import javax.ejb.Remote;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -38,8 +36,5 @@ public interface ChatRest {
 	@GET
 	@Path("/registered")
 	public void getRegisteredUsers(@HeaderParam("Authorization") String username);
-	
-	@POST
-	@Path("/loggedIn")
-	public void postLoggedUsers(List<User>users);
+
 }

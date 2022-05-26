@@ -1,18 +1,10 @@
 package rest;
 
-import java.lang.management.ManagementFactory;
 import java.util.List;
 
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
-import javax.management.AttributeNotFoundException;
-import javax.management.InstanceNotFoundException;
-import javax.management.MBeanException;
-import javax.management.MBeanServer;
-import javax.management.MalformedObjectNameException;
-import javax.management.ObjectName;
-import javax.management.ReflectionException;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 
@@ -21,6 +13,7 @@ import chatmanager.ChatManagerRemote;
 import connectionmanager.ConnectionManager;
 import messagemanager.AgentMessage;
 import messagemanager.MessageManagerRemote;
+import models.Host;
 import models.User;
 import util.JNDILookup;
 
@@ -58,6 +51,8 @@ public class ChatRestBean implements ChatRest, ChatRestLocal {
 
 	@Override
 	public Response login(User user) {
+		Host host = connectionManager.getHost();
+		user.setHost(host);
 		if(!chatManager.login(user)) {
 			return Response.status(Response.Status.BAD_REQUEST).build();
 		}
@@ -106,9 +101,4 @@ public class ChatRestBean implements ChatRest, ChatRestLocal {
 		messageManager.post(message);
 	}
 
-	@Override
-	public void postLoggedUsers(List<User> users) {
-		System.out.println("Number of logged users: " + users.size());
-		chatManager.setLoggedInUsers(users);
-	}
 }

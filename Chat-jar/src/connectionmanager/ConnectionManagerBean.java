@@ -29,6 +29,7 @@ import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
 
 import chatmanager.ChatManagerRemote;
+import models.Host;
 import util.FileUtils;
 import ws.WSChat;
 
@@ -181,5 +182,10 @@ public class ConnectionManagerBean implements ConnectionManager {
 			}
 		}
 		return false;
+	}
+
+	@Override
+	public Host getHost() {
+		return new Host(nodeAlias, nodeAddress);
 	}
 }
