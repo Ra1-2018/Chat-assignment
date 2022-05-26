@@ -29,6 +29,8 @@ import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
 
 import chatmanager.ChatManagerRemote;
+import messagemanager.AgentMessage;
+import messagemanager.MessageManagerRemote;
 import models.User;
 import util.FileUtils;
 import ws.WSChat;
@@ -49,6 +51,9 @@ public class ConnectionManagerBean implements ConnectionManager {
 	
 	@EJB
 	private WSChat ws;
+	
+	@EJB
+	private MessageManagerRemote messageManager;
 	
 	@PostConstruct
 	private void init() {
@@ -200,6 +205,16 @@ public class ConnectionManagerBean implements ConnectionManager {
 	public void setLoggedInRemote(List<User> users) {
 		System.out.println("Number of logged users: " + users.size());
 		chatManager.setLoggedInUsers(users);
+		for(User u : chatManager.loggedInUsers()) {
+			if(!u.getHost().getAlias().equals(getNodeAlias())) {
+				continue;
+			}
+			AgentMessage message = new AgentMessage();
+			message.userArgs.put("receiver", u.getUsername());
+			message.userArgs.put("command", "GET_LOGGEDIN");
+			
+			messageManager.post(message);
+		}
 	}
 
 }

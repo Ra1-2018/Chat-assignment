@@ -32,6 +32,9 @@ public class ChatRestBean implements ChatRest, ChatRestLocal {
 			return Response.status(Response.Status.BAD_REQUEST).build();
 		}
 		for(User u : chatManager.loggedInUsers()) {
+			if(!u.getHost().getAlias().equals(getNodeAlias() + ":8080")) {
+				continue;
+			}
 			AgentMessage message = new AgentMessage();
 			message.userArgs.put("receiver", u.getUsername());
 			message.userArgs.put("command", "GET_REGISTERED");
@@ -48,6 +51,9 @@ public class ChatRestBean implements ChatRest, ChatRestLocal {
 		}
 		agentManager.startAgent(JNDILookup.UserAgentLookup, user.getUsername());
 		for(User u : chatManager.loggedInUsers()) {
+			if(!u.getHost().getAlias().equals(getNodeAlias() + ":8080")) {
+				continue;
+			}
 			AgentMessage message = new AgentMessage();
 			message.userArgs.put("receiver", u.getUsername());
 			message.userArgs.put("command", "GET_LOGGEDIN");
@@ -73,6 +79,9 @@ public class ChatRestBean implements ChatRest, ChatRestLocal {
 		}
 		agentManager.stopAgent(username);
 		for(User u : chatManager.loggedInUsers()) {
+			if(!u.getHost().getAlias().equals(getNodeAlias() + ":8080")) {
+				continue;
+			}
 			AgentMessage message = new AgentMessage();
 			message.userArgs.put("receiver", u.getUsername());
 			message.userArgs.put("command", "GET_LOGGEDIN");
@@ -91,4 +100,7 @@ public class ChatRestBean implements ChatRest, ChatRestLocal {
 		messageManager.post(message);
 	}
 	
+	private String getNodeAlias() {		
+		return System.getProperty("jboss.node.name");
+	}
 }
