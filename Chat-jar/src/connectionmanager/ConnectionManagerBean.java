@@ -206,7 +206,7 @@ public class ConnectionManagerBean implements ConnectionManager {
 		System.out.println("Number of logged users: " + users.size());
 		chatManager.setLoggedInUsers(users);
 		for(User u : chatManager.loggedInUsers()) {
-			if(!u.getHost().getAlias().equals(getNodeAlias())) {
+			if(!u.getHost().getAlias().equals(getNodeAlias() + ":8080")) {
 				continue;
 			}
 			AgentMessage message = new AgentMessage();
