@@ -152,8 +152,13 @@ public class ConnectionManagerBean implements ConnectionManager {
 	
 	@PreDestroy
 	private void shutDown() {
-		notifyAllDelete(nodeAlias);
-		notifyLogOutOnShutDown(nodeAlias);
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				notifyAllDelete(nodeAlias);
+				notifyLogOutOnShutDown(nodeAlias);
+			}
+		}).start();
 	}
 	
 	private void notifyLogOutOnShutDown(String alias) {
