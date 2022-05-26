@@ -19,4 +19,6 @@ public interface ChatManagerRemote {
 	
 	public List<User> registeredUsers();
 	
+	public void setLoggedInUsers(List<User> users);
+	
 }

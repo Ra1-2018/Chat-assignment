@@ -1,5 +1,7 @@
 package rest;
 
+import java.util.List;
+
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
@@ -8,6 +10,7 @@ import javax.ws.rs.core.Response;
 
 import agentmanager.AgentManagerRemote;
 import chatmanager.ChatManagerRemote;
+import connectionmanager.ConnectionManager;
 import messagemanager.AgentMessage;
 import messagemanager.MessageManagerRemote;
 import models.User;
@@ -27,6 +30,9 @@ public class ChatRestBean implements ChatRest, ChatRestLocal {
 	@EJB
 	private AgentManagerRemote agentManager;
 	
+	@EJB
+	private ConnectionManager connectionManager;
+	
 	@Override
 	public Response register(User user) {
 		if(!chatManager.register(user)) {
@@ -44,6 +50,7 @@ public class ChatRestBean implements ChatRest, ChatRestLocal {
 
 	@Override
 	public Response login(User user) {
+		user.setHost(connectionManager.getHost());
 		if(!chatManager.login(user)) {
 			return Response.status(Response.Status.BAD_REQUEST).build();
 		}
@@ -55,6 +62,7 @@ public class ChatRestBean implements ChatRest, ChatRestLocal {
 			
 			messageManager.post(message);
 		}
+		connectionManager.notifyAllLoggedIn();
 		return Response.status(Response.Status.OK).entity(user).build();
 	}
 
@@ -90,6 +98,12 @@ public class ChatRestBean implements ChatRest, ChatRestLocal {
 		message.userArgs.put("command", "GET_REGISTERED");
 		
 		messageManager.post(message);
+	}
+
+	@Override
+	public void postLoggedUsers(List<User> users) {
+		System.out.println("Number of logged users: " + users.size());
+		chatManager.setLoggedInUsers(users);
 	}
 
 }

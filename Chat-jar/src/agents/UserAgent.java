@@ -78,9 +78,9 @@ public class UserAgent implements Agent {
 						String sender = (String) tmsg.getObjectProperty("sender");
 						String content = (String) tmsg.getObjectProperty("content");
 						String subject = (String) tmsg.getObjectProperty("subject");
-						models.Message msg = new models.Message(new User(receiver, ""), new User(sender, ""), LocalDateTime.now(), subject, content);
-						messageStorage.addMessage(msg);
-						response += msg.toString();
+						//models.Message msg = new models.Message(new User(receiver, ""), new User(sender, ""), LocalDateTime.now(), subject, content);
+						//messageStorage.addMessage(msg);
+						//response += msg.toString();
 						break;
 					case "GET_MESSAGES":
 						response = "MESSAGES!";

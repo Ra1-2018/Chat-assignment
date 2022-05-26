@@ -29,6 +29,8 @@ import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
 
 import chatmanager.ChatManagerRemote;
+import models.Host;
+import rest.ChatRest;
 import util.FileUtils;
 import ws.WSChat;
 
@@ -186,5 +188,23 @@ public class ConnectionManagerBean implements ConnectionManager {
 			}
 		}
 		return false;
+	}
+
+	@Override
+	public Host getHost() {
+		return new Host(nodeAlias, nodeAddress);
+	}
+
+	@Override
+	public void notifyAllLoggedIn() {
+		for (String c : connections) {
+			ResteasyClient client = new ResteasyClientBuilder().build();
+			ResteasyWebTarget rtarget = client.target("http://" + c + "/Chat-war/api/users");
+			//ConnectionManager rest = rtarget.proxy(ConnectionManager.class);
+			//rest.addNode(nodeAlias);
+			ChatRest rest = rtarget.proxy(ChatRest.class);
+			rest.postLoggedUsers(chatManager.loggedInUsers());
+			client.close();
+		}
 	}
 }
