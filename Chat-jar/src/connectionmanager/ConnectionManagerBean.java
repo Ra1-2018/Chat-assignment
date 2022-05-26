@@ -117,6 +117,18 @@ public class ConnectionManagerBean implements ConnectionManager {
 			client.close();
 		}
 		connections.add(nodeAlias);
+		
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				ResteasyClient resteasyClient = new ResteasyClientBuilder().build();
+				ResteasyWebTarget rtarget = resteasyClient.target("http://"  + nodeAlias + "/Chat-war/api/connection");
+				ConnectionManager rest = rtarget.proxy(ConnectionManager.class);
+				rest.setLoggedInRemote(chatManager.loggedInUsers());
+				rest.setRegisteredRemote(chatManager.registeredUsers());
+				resteasyClient.close();
+			}
+		}).start();
 		return connections;
 	}
 
