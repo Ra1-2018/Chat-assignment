@@ -58,6 +58,7 @@ public class ChatRestBean implements ChatRest, ChatRestLocal {
 			
 			messageManager.post(message);
 		}
+		connectionManager.notifyAllLoggedIn();
 		return Response.status(Response.Status.OK).entity(user).build();
 	}
 
