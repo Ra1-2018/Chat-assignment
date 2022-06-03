@@ -54,9 +54,6 @@ public class ChatManagerBean implements ChatManagerRemote, ChatManagerLocal {
 		boolean exists = registered.stream().anyMatch(u->u.getUsername().equals(u.getUsername()) && u.getPassword().equals(u.getPassword()));
 		if(!exists)
 			return false;
-		boolean alreadyLoggedIn = loggedIn.stream().anyMatch(u->u.getUsername().equals(u.getUsername()) && u.getPassword().equals(u.getPassword()));
-		if(alreadyLoggedIn)
-			return true;
 		user.setHost(getLocalHost());
 		System.out.println("New user logged in on host: " + user.getHost());
 		loggedIn.add(user);
