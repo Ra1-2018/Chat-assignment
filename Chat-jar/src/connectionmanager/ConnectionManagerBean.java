@@ -142,7 +142,6 @@ public class ConnectionManagerBean implements ConnectionManager {
 	public void deleteNode(String nodeAlias) {
 		System.out.println("Node removed: " + nodeAlias);
 		connections.remove(nodeAlias);
-		chatManager.logoutNode(nodeAlias);
 	}
 
 	@Override
@@ -178,7 +177,6 @@ public class ConnectionManagerBean implements ConnectionManager {
 					if(!nodeResponded(c)) {
 						System.out.println("Node: " + c + " not responding");
 						connections.remove(c);
-						chatManager.logoutNode(c);
 						notifyAllDelete(c);
 					}
 				}

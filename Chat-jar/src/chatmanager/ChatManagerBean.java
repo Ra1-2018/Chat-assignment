@@ -122,14 +122,4 @@ public class ChatManagerBean implements ChatManagerRemote, ChatManagerLocal {
 		return null;
 	}
 
-	@Override
-	public void logoutNode(String nodeAlias) {
-		List<User> result = new ArrayList<>();
-		for(User user: loggedIn) {
-			if(!user.getHost().getAlias().equals(nodeAlias)) {
-				result.add(user);
-			}
-		}
-		loggedIn = result;
-	}
 }
