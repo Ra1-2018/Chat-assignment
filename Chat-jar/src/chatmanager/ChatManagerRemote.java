@@ -24,4 +24,6 @@ public interface ChatManagerRemote {
 	public void setRegisteredUsers(List<User> users);
 	
 	public User getByUsername(String username);
+	
+	public void logoutNode(String nodeAlias);
 }
